@@ -14,12 +14,10 @@ private:
 		public:
 		T dato;
 		Nodo* ant;
-		Nodo* sig;
 
-		Nodo(Nodo* anterior,Nodo* siguiente,const T data){
+		Nodo(Nodo* anterior, const T data){
 			dato = data;
 			ant =  anterior;
-			sig = siguiente;
 		}
 		~Nodo(){//DUDA IMPORTANTE DESCONOZCO SI ESTO ES NECESARIO
 			//delete ant;
@@ -53,13 +51,13 @@ public:
 //	TODO: La funcion anyadir ahora es el metodo anyadir. Rellénalo. Para acceder a atributos
 //	y métodos de la propia clase, deberás hacerlo a través del puntero this->
 	bool anyadir(const T& p)
-	{  Nodo* nuevo;
+	{  	Nodo* nuevo;
 		if( primero == nullptr){
-			 nuevo = new Nodo(nullptr,nullptr,p);
+			 nuevo = new Nodo(nullptr,p);
 			primero = nuevo;
 		}
 		else{
-			 nuevo = new Nodo(ultimo,nullptr,p);
+			 nuevo = new Nodo(ultimo,p);
 
 		}
 		ultimo = nuevo;
@@ -74,7 +72,6 @@ public:
 
 			Nodo* aux = ultimo;
 			ultimo = ultimo->ant;
-			if(ultimo!=nullptr) ultimo->sig = nullptr;
 			else primero = nullptr;
 
 			delete aux;
