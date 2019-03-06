@@ -6,6 +6,8 @@
 //a declarar las dos funciones siguientes: 
 //void anyadir_elementos(agrupacion_estatica<int>& ag)
 //void anyadir_elementos(agrupacion_dinamica<int>& ag)
+template<typename R>
+void anyadir_elementos(R& ag)
 {
 	ag.anyadir(42);
 	ag.anyadir(15);
@@ -17,6 +19,8 @@
 //a declarar las dos funciones siguientes: 
 //void mostrar_elementos(const agrupacion_estatica<int>& ag)
 //void mostrar_elementos(const agrupacion_dinamica<int>& ag)
+template<typename R>
+void mostrar_elementos(const R& ag)
 {
 	for (int i : ag) std::cout<<i<<" ";
 	std::cout<<std::endl;
