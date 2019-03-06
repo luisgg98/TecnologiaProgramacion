@@ -17,9 +17,9 @@ private:
 		Nodo* sig;
 
 		Nodo(Nodo* anterior,Nodo* siguiente,const T data){
-			this->dato = data;
-			this->ant =  anterior;
-			this->sig = siguiente;
+			dato = data;
+			ant =  anterior;
+			sig = siguiente;
 		}
 		~Nodo(){//DUDA IMPORTANTE DESCONOZCO SI ESTO ES NECESARIO
 			//delete ant;
@@ -46,7 +46,8 @@ public:
 	}
 
 	~agrupacion_dinamica(){//DUDA IMPORTANTE DESCONOZCO SI ESTO ES CORRECTO
-
+		delete primero;
+		delete ultimo;
 	}
 
 //	TODO: La funcion anyadir ahora es el metodo anyadir. Rellénalo. Para acceder a atributos
@@ -94,8 +95,7 @@ public:
 		const agrupacion_dinamica<T>& c;
 	public:
 		//Este constructor sirve como inicializador del iterador, tanto al principio como al final.
-		const_iterator(const agrupacion_dinamica& c_,Nodo* i_) : c(c_) { 
-			this->i = i;
+		const_iterator(const agrupacion_dinamica& c_,Nodo* i_) : i(i_), c(c_) { 
 		 }
 		
 	//	En la definición por defecto de los iteradores, se separa el avance del iterador
@@ -110,7 +110,7 @@ public:
 			//que en nuestra definición de agrupación la estructura se recorre desde el último
 			//elemento introducido hasta el primero (como si se tratara de una pila).  
 
-			if( i!=nullptr ) i = i->ant;
+			if( i != nullptr ) i = i->ant;
 
 			return (*this);
 	       	}
@@ -144,7 +144,7 @@ public:
 	//Date cuenta que los valores que le pasamos como índice del iterador son para que se recorra la
 	//estructura desde el último elemento (this->total - 1) hasta el primero (0).
 	const_iterator begin() const { return const_iterator(*this,this->ultimo); }
-	const_iterator end()   const { return const_iterator(*this,this->primero); }
+	const_iterator end()   const { return const_iterator(*this,this->primero->ant); }
 };
 
 #endif //fin de agrupacion_dinamica.h
