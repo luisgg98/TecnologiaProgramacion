@@ -36,4 +36,8 @@ int main(int argc,char* argv[])
 
 	mostrar_elementos(ag_e);
 	mostrar_elementos(ag_d);	
+
+	ag_d.~agrupacion_dinamica();
+
+	mostrar_elementos(ag_d);
 }

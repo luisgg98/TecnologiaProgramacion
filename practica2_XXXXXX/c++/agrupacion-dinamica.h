@@ -14,10 +14,12 @@ private:
 		public:
 		T dato;
 		Nodo* ant;
+		//Nodo* sig;
 
-		Nodo(Nodo* anterior, const T data){
+		Nodo(Nodo* anterior,const T data){
 			dato = data;
 			ant =  anterior;
+			//sig = siguiente;
 		}
 		~Nodo(){//DUDA IMPORTANTE DESCONOZCO SI ESTO ES NECESARIO
 			//delete ant;
@@ -31,7 +33,7 @@ private:
 
 public:
 //	Ahora la funcion iniciar de la estructura es el constructor. 
-	agrupacion_dinamica() : total(0)
+	agrupacion_dinamica() 
 	        //TODO: Invoca a los constructores de los miembros privados (o deja
 		//que se construyan por defecto si lo consideras necesario).
 		//Separados por comas (si no sabes cómo hacerlo, mira cómo está hecho
@@ -43,15 +45,21 @@ public:
 		//Si invocas a los constructores de los miembros privados no necesitas rellenar el código del constructor.
 	}
 
-	~agrupacion_dinamica(){//DUDA IMPORTANTE DESCONOZCO SI ESTO ES CORRECTO
-		delete primero;
-		delete ultimo;
+	~agrupacion_dinamica(){
+
+		Nodo* aux = ultimo;
+		while(ultimo !=nullptr){
+		
+		ultimo = ultimo->ant;
+		delete aux;
+		aux = ultimo;
+		}
 	}
 
 //	TODO: La funcion anyadir ahora es el metodo anyadir. Rellénalo. Para acceder a atributos
 //	y métodos de la propia clase, deberás hacerlo a través del puntero this->
 	bool anyadir(const T& p)
-	{  	Nodo* nuevo;
+	{  Nodo* nuevo;
 		if( primero == nullptr){
 			 nuevo = new Nodo(nullptr,p);
 			primero = nuevo;
@@ -72,7 +80,9 @@ public:
 
 			Nodo* aux = ultimo;
 			ultimo = ultimo->ant;
-			else primero = nullptr;
+			if(ultimo==nullptr){
+				primero = nullptr;
+			} 
 
 			delete aux;
 		}
