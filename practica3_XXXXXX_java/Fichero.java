@@ -11,4 +11,6 @@ abstract class Fichero {
     public String nombre() {
         return nombre;
     }
+
+    abstract public String who();
 }

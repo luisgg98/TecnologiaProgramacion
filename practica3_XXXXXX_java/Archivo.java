@@ -16,4 +16,8 @@ class Archivo extends Fichero {
         tamanyo = numero;
     }
 
+    public String who(){
+        return "Archivo";
+    }
+
 }

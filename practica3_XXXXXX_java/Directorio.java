@@ -13,13 +13,20 @@ class Directorio extends Fichero {
     public void anaydirElemento(Fichero elemento) {
         // EXCEPCION INSERTAR UN FICHERO ERRONEO
         if(elemento.nombre()==""){
-            throw new ExcepcionFicheroErroneo();
+            //throw new ExcepcionFicheroErroneo();
         }
         else{
             contenido.put(elemento.nombre(), elemento);
         }
-        catch (ExcepcionFicheroErroneo e){
-            system.out.println(e.toString());
+    }
+
+    public void eliminarElemento(Fichero elemento) {
+        // EXCEPCION INSERTAR UN FICHERO ERRONEO
+        if(elemento.nombre()==""){
+            //throw new ExcepcionFicheroErroneo();
+        }
+        else{
+            contenido.remove(elemento.nombre(), elemento);
         }
     }
 
@@ -45,12 +52,11 @@ class Directorio extends Fichero {
 
     public Fichero buscar(String clave) {
         // EXCEPCION BUSCAR ALGO QUE NO EXISTE
-        try {
-            return contenido.get(clave);
-            throw new ExcepcionNoEncontradoDirectorios(clave);
-        } catch (ExcepcionNoEncontradoDirectorios e) {
-            system.out.println(e.toString());
-        }
+        return contenido.get(clave);
+    }
+
+    public String who(){
+        return "Dir";
     }
 
 }

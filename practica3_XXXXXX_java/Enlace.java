@@ -11,4 +11,8 @@ class Enlace extends Fichero {
         return contenido.tamanyo();
     }
 
+    public String who(){
+        return "Link";
+    }
+
 }
