@@ -6,7 +6,7 @@ abstract class Fichero {
         nombre = _nombre;
     }
 
-    abstract public int tamanyo();
+    abstract public int tamanyo(int nvl) throws ExcepcionCiclo;
 
     public String nombre() {
         return nombre;

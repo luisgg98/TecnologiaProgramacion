@@ -6,10 +6,14 @@ class Ruta {
     LinkedList<Directorio> contenido;
     // ListIterator<Directorio> iterador;
 
-    Ruta(Directorio _directorio) {
+    Ruta(Directorio _directorio) throws ExcepcionElementoInvalido{
         // SALTA LA EXCEPCION SI NO EXISTE EL DIRECTORIO
-        contenido = new LinkedList<Directorio>();
-        contenido.addFirst(_directorio);
+        if(_directorio == null){
+            throw new ExcepcionElementoInvalido("Elemento es null");
+        }else{
+            contenido = new LinkedList<Directorio>();
+            contenido.addFirst(_directorio);
+        }
         // iterador = contenido.listIterator();
     }
 
@@ -33,7 +37,7 @@ class Ruta {
 
     }
 
-    public void cd(String path) {
+    public void cd(String path) throws ExcepcionNoEncontrado, ExcepcionElementoInvalido, ExcepcionFicheroRoot {
         LinkedList<Directorio> aux = new LinkedList<Directorio>();
         aux = (LinkedList<Directorio>) contenido.clone();
 
@@ -43,43 +47,51 @@ class Ruta {
         contenido = aux;
     }
 
-    private void cd_rec(LinkedList<String> path, LinkedList<Directorio> aux) {
+    private void cd_rec(LinkedList<String> path, LinkedList<Directorio> aux) throws ExcepcionNoEncontrado, ExcepcionElementoInvalido, ExcepcionFicheroRoot {
         if (!path.isEmpty()) {
             String elemento = path.removeFirst();
-            if (elemento == "/") {
+            if (elemento.equals("/"+contenido.getFirst().nombre())) {
                 aux.clear();
                 aux.add(contenido.getFirst());
-            } else if (elemento == "..") {
-                aux.removeLast();
-            } else if (elemento == ".") {
+            } else if (elemento.equals("..")) {
+                if(aux.size() == 1){
+                    throw new ExcepcionFicheroRoot("No hay ningun directorio anterior al actual");
+                }else{
+                    aux.removeLast();
+                }
+            } else if (elemento.equals(".") ) {
 
             } else {
                 Fichero f = aux.getLast().buscar(elemento);
                 if (f != null) {
-                    if (f.who() == "Dir") {
+                    if (f.who().equals("Dir")) {
                         aux.add((Directorio) f);
-                    } else if (f.who() == "Link") {
+                    } else if (f.who().equals("Link")) {
                         Enlace e = (Enlace) f;
-                        if (e.type() == "Dir") {
+                        if (e.type().equals("Dir")) {
                             aux.add((Directorio) e.contenido);
                         }
+                    }else {
+                        throw new ExcepcionElementoInvalido("El elemento "+ elemento + " no es un directorio");
                     }
                 } else {
-                    // throw exception;
+                    throw new ExcepcionNoEncontrado(elemento);
                 }
             }
             cd_rec(path, aux);
         }
     }
 
-    public void stat(String elem) {
-        // EXCEPCION NO ENCONTRADO EL FICHERO DEL QUE MOSTRAR STATS
-        // Fichero dato = contenido.getLast().buscar(elem);
-        System.out.println(contenido.getLast().buscar(elem).tamanyo());
+    public void stat(String elem) throws ExcepcionNoEncontrado ,ExcepcionCiclo{
 
+        if(elem.equals(".")){
+            System.out.println(contenido.getLast().tamanyo(0));
+        }else{
+            System.out.println(contenido.getLast().buscar(elem).tamanyo(0));
+        }
     }
 
-    public void vim(String file, int size) {
+    public void vim(String file, int size) throws ExcepcionNoEncontrado, ExcepcionYaExiste  {
         // EXCEPCION SE INTENTA MODIFICAR UN FILE QUE NO EXISTE
         Fichero f = contenido.getLast().buscar(file);
         if (f != null && f.who() == "Archivo") {
@@ -92,7 +104,7 @@ class Ruta {
         }
     }
 
-    public void mkdir(String dir) {
+    public void mkdir(String dir) throws ExcepcionYaExiste {
 
         Directorio direct = new Directorio(dir);
         // Crear un directorio que ya existe EXCEPCION
@@ -100,8 +112,9 @@ class Ruta {
 
     }
 
-    public void ln(String orig, String dest) {
+    public void ln(String orig, String dest) throws ExcepcionNoEncontrado, ExcepcionYaExiste, ExcepcionElementoInvalido, ExcepcionFicheroRoot  {
         // EXCEPCION Crear un enlace un directorio que no existe
+        Enlace e;
         if (orig.contains("/")) {
             LinkedList<Directorio> aux = new LinkedList<Directorio>();
             aux = (LinkedList<Directorio>) contenido.clone();
@@ -111,17 +124,25 @@ class Ruta {
             orig = a.removeLast();
 
             cd_rec(a, aux);
-
-            Enlace e = new Enlace(aux.getLast().buscar(orig), dest);
-            contenido.getLast().anaydirElemento(e);
-
-        } else {
-            Enlace e = new Enlace(contenido.getLast().buscar(orig), dest);
-            contenido.getLast().anaydirElemento(e);
+           
+            if(orig.equals(".")){
+                e = new Enlace(aux.getLast(), dest);
+            }else{
+                e = new Enlace(aux.getLast().buscar(orig), dest);
+            }
+        }else{
+            if(orig.equals(".")){
+                e = new Enlace(contenido.getLast(), dest);
+            }else{
+                e = new Enlace(contenido.getLast().buscar(orig), dest);
+            }
         }
+
+        contenido.getLast().anaydirElemento(e);
+    
     }
 
-    public void rm(String e) {
+    public void rm(String e) throws ExcepcionNoEncontrado, ExcepcionElementoInvalido, ExcepcionFicheroRoot {
         if (e.contains("/")) {
             LinkedList<Directorio> aux = new LinkedList<Directorio>();
             aux = (LinkedList<Directorio>) contenido.clone();
@@ -145,13 +166,23 @@ class Ruta {
 
         String[] camino = path.split("/");
 
-        if (path.charAt(0) == '/') {
-            a.add("/");
-        }
         for (String i : camino) {
             a.add(i);
-        }
+        }   
 
+        if (path.charAt(0) == '/') {
+
+            if(a.size() >= 1 ){
+
+                a.removeFirst();
+                a.set(0, "/"+a.getFirst());
+                 
+            }else if (a.size() == 0){
+                a.add(0, "/"+contenido.getFirst().nombre());
+            }
+        
+        }
+      
         return a;
     }
 

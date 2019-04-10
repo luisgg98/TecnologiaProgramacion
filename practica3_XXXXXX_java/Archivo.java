@@ -8,7 +8,7 @@ class Archivo extends Fichero {
         tamanyo = _tamanyo;
     }
 
-    public int tamanyo() {
+    public int tamanyo(int nvl) {
         return tamanyo;
     }
 

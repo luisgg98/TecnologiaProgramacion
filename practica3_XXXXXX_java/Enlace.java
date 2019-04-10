@@ -7,8 +7,13 @@ class Enlace extends Fichero {
         contenido = _contenido;
     }
 
-    public int tamanyo() {
-        return contenido.tamanyo();
+    public int tamanyo(int nvl) throws ExcepcionCiclo {
+        if(nvl < 15){
+            return contenido.tamanyo(nvl+1);
+        }
+        else{
+            throw new ExcepcionCiclo();
+        }
     }
 
     public String who() {

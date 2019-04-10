@@ -5,6 +5,8 @@ class probacion {
         Directorio user = new Directorio("luisgg");
         arbol.anaydirElemento(user);
         Ruta laruta = new Ruta(arbol);
+        laruta.sl();
+
         laruta.ls();
         laruta.mkdir("saul");
         laruta.vim("deberes", 500);

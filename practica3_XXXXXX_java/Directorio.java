@@ -10,34 +10,36 @@ class Directorio extends Fichero {
         contenido = new HashMap<String, Fichero>();
     }
 
-    public void anaydirElemento(Fichero elemento) {
+    public void anaydirElemento(Fichero elemento) throws ExcepcionYaExiste {
         // EXCEPCION INSERTAR UN FICHERO ERRONEO
-        if (elemento.nombre() == "") {
-            // throw new ExcepcionNoExiste(elemento.nombre());
-        } else {
+        if(contenido.get(elemento.nombre()) == null){
             contenido.put(elemento.nombre(), elemento);
+        }else{
+            throw new ExcepcionYaExiste(elemento.nombre());
         }
+    
     }
 
-    public void eliminarElemento(Fichero elemento) {
+    public void eliminarElemento(Fichero elemento){
         // EXCEPCION INSERTAR UN FICHERO ERRONEO
-        if (elemento.nombre() == "") {
-
-            // throw new ExcepcionFicheroErroneo();
-        } else {
-            contenido.remove(elemento.nombre(), elemento);
-        }
+        
+        contenido.remove(elemento.nombre(), elemento);
+        
     }
 
-    public int tamanyo() {
-        int dato = 0;
+    public int tamanyo(int nvl) throws ExcepcionCiclo {
+        if( nvl < 15 ){
+            int dato = 0;
 
-        for (Map.Entry<String, Fichero> entry : contenido.entrySet()) {
-            Fichero prueba = entry.getValue();
-            dato += prueba.tamanyo();
+            for (Map.Entry<String, Fichero> entry : contenido.entrySet()) {
+                Fichero prueba = entry.getValue();
+                dato += prueba.tamanyo(nvl+1);
+            }
+
+            return dato;
+        }else{
+            throw new ExcepcionCiclo();
         }
-
-        return dato;
     }
 
     public void listar() {
@@ -49,9 +51,14 @@ class Directorio extends Fichero {
 
     }
 
-    public Fichero buscar(String clave) {
+    public Fichero buscar(String clave) throws ExcepcionNoEncontrado{
         // EXCEPCION BUSCAR ALGO QUE NO EXISTE
-        return contenido.get(clave);
+        try{
+            return contenido.get(clave);
+        }catch(NullPointerException e){
+            throw new ExcepcionNoEncontrado(clave);
+        }
+        
     }
 
     public String who() {
