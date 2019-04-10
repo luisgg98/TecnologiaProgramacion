@@ -12,20 +12,19 @@ class Directorio extends Fichero {
 
     public void anaydirElemento(Fichero elemento) {
         // EXCEPCION INSERTAR UN FICHERO ERRONEO
-        if(elemento.nombre()==""){
-            //throw new ExcepcionFicheroErroneo();
-        }
-        else{
+        if (elemento.nombre() == "") {
+            // throw new ExcepcionNoExiste(elemento.nombre());
+        } else {
             contenido.put(elemento.nombre(), elemento);
         }
     }
 
     public void eliminarElemento(Fichero elemento) {
         // EXCEPCION INSERTAR UN FICHERO ERRONEO
-        if(elemento.nombre()==""){
-            //throw new ExcepcionFicheroErroneo();
-        }
-        else{
+        if (elemento.nombre() == "") {
+
+            // throw new ExcepcionFicheroErroneo();
+        } else {
             contenido.remove(elemento.nombre(), elemento);
         }
     }
@@ -55,7 +54,7 @@ class Directorio extends Fichero {
         return contenido.get(clave);
     }
 
-    public String who(){
+    public String who() {
         return "Dir";
     }
 

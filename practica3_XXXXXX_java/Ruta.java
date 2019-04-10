@@ -1,4 +1,3 @@
-
 import java.util.LinkedList;
 import java.util.ListIterator;
 
@@ -36,38 +35,42 @@ class Ruta {
 
     public void cd(String path) {
         LinkedList<Directorio> aux = new LinkedList<Directorio>();
-        aux = (LinkedList<Directorio>)contenido.clone();
+        aux = (LinkedList<Directorio>) contenido.clone();
 
-        LinkedList<String> a = localizar( path );
+        LinkedList<String> a = localizar(path);
 
         cd_rec(a, aux);
         contenido = aux;
     }
 
-    private void cd_rec(LinkedList<String> path, LinkedList<Directorio> aux){
-        if( !path.isEmpty() ){
+    private void cd_rec(LinkedList<String> path, LinkedList<Directorio> aux) {
+        if (!path.isEmpty()) {
             String elemento = path.removeFirst();
-            if ( elemento == "/" ){
+            if (elemento == "/") {
                 aux.clear();
                 aux.add(contenido.getFirst());
-            }else if( elemento == ".." ){
-                aux.pop();
-            }else if ( elemento == "."){
+            } else if (elemento == "..") {
+                aux.removeLast();
+            } else if (elemento == ".") {
 
-            }else{
-                Fichero f = aux.getLast().buscar( elemento );
-                if( f != null && f.who() == "Dir"){
-                    aux.add((Directorio)f);
-                }
-                else{
-                    //throw exception;
+            } else {
+                Fichero f = aux.getLast().buscar(elemento);
+                if (f != null) {
+                    if (f.who() == "Dir") {
+                        aux.add((Directorio) f);
+                    } else if (f.who() == "Link") {
+                        Enlace e = (Enlace) f;
+                        if (e.type() == "Dir") {
+                            aux.add((Directorio) e.contenido);
+                        }
+                    }
+                } else {
+                    // throw exception;
                 }
             }
             cd_rec(path, aux);
         }
     }
-    
-           
 
     public void stat(String elem) {
         // EXCEPCION NO ENCONTRADO EL FICHERO DEL QUE MOSTRAR STATS
@@ -78,13 +81,14 @@ class Ruta {
 
     public void vim(String file, int size) {
         // EXCEPCION SE INTENTA MODIFICAR UN FILE QUE NO EXISTE
-        Fichero f = contenido.getLast().buscar( file );
-        if( f != null && f.who() == "Archivo"){
-            Archivo a = (Archivo)f;
+        Fichero f = contenido.getLast().buscar(file);
+        if (f != null && f.who() == "Archivo") {
+            Archivo a = (Archivo) f;
             a.cambiarTamanyo(size);
-        }
-        else{
-            //throw exception;
+        } else {
+            Archivo nuevo = new Archivo(size, file);
+            contenido.getLast().anaydirElemento(nuevo);
+            // throw exception;
         }
     }
 
@@ -98,31 +102,31 @@ class Ruta {
 
     public void ln(String orig, String dest) {
         // EXCEPCION Crear un enlace un directorio que no existe
-        if( orig.contains("/")){
+        if (orig.contains("/")) {
             LinkedList<Directorio> aux = new LinkedList<Directorio>();
-            aux = (LinkedList<Directorio>)contenido.clone();
+            aux = (LinkedList<Directorio>) contenido.clone();
 
-            LinkedList<String> a = localizar( orig );
+            LinkedList<String> a = localizar(orig);
 
             orig = a.removeLast();
 
             cd_rec(a, aux);
 
-            Enlace e = new Enlace( aux.getLast().buscar(orig), dest);
+            Enlace e = new Enlace(aux.getLast().buscar(orig), dest);
             contenido.getLast().anaydirElemento(e);
 
-        }else{
-            Enlace e = new Enlace( contenido.getLast().buscar(orig), dest);
+        } else {
+            Enlace e = new Enlace(contenido.getLast().buscar(orig), dest);
             contenido.getLast().anaydirElemento(e);
         }
     }
 
     public void rm(String e) {
-        if( e.contains("/") ){
+        if (e.contains("/")) {
             LinkedList<Directorio> aux = new LinkedList<Directorio>();
-            aux = (LinkedList<Directorio>)contenido.clone();
+            aux = (LinkedList<Directorio>) contenido.clone();
 
-            LinkedList<String> a = localizar( e );
+            LinkedList<String> a = localizar(e);
 
             e = a.removeLast();
 
@@ -130,24 +134,24 @@ class Ruta {
 
             aux.getLast().eliminarElemento(aux.getLast().buscar(e));
 
-        }else{
+        } else {
             contenido.getLast().eliminarElemento(contenido.getLast().buscar(e));
         }
 
     }
 
-    private LinkedList<String> localizar(String path){
+    private LinkedList<String> localizar(String path) {
         LinkedList<String> a = new LinkedList<String>();
-    
+
         String[] camino = path.split("/");
-    
-        if (path.charAt(0) == '/'){
+
+        if (path.charAt(0) == '/') {
             a.add("/");
         }
-        for( String i : camino ){
+        for (String i : camino) {
             a.add(i);
         }
-    
+
         return a;
     }
 
