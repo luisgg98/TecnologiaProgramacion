@@ -1,11 +1,13 @@
 
 class probacion {
     public static void main(String[] args) {
+        try{
+
         Directorio arbol = new Directorio("home");
         Directorio user = new Directorio("luisgg");
         arbol.anaydirElemento(user);
         Ruta laruta = new Ruta(arbol);
-        laruta.sl();
+        
 
         laruta.ls();
         laruta.mkdir("saul");
@@ -32,8 +34,14 @@ class probacion {
         laruta.cd("..");
         System.out.println(laruta.pwd());
         laruta.rm("saul/dani");
-        laruta.cd("/home/saul/dani");
+        //laruta.cd("/home/saul/dani");
         System.out.println(laruta.pwd());
-
+        //laruta.mkdir("pepe ola");
+        //laruta.vim("/ola", 100);
+        laruta.ln("ola ", "r");
+        }
+        catch(ExcepcionArbolFicheros e){
+            System.out.println(e);
+        }
     }
 };

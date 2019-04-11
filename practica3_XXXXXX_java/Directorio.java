@@ -12,36 +12,31 @@ class Directorio extends Fichero {
 
     public void anaydirElemento(Fichero elemento) throws ExcepcionYaExiste {
         // EXCEPCION INSERTAR UN FICHERO ERRONEO
-        if (contenido.get(elemento.nombre()) == null) {
+        if(contenido.get(elemento.nombre()) == null){
             contenido.put(elemento.nombre(), elemento);
-        } else {
+        }else{
             throw new ExcepcionYaExiste(elemento.nombre());
         }
-
+    
     }
 
-    public void eliminarElemento(Fichero elemento) throws ExcepcionFicheroErroneo {
-        // EXCEPCION INSERTAR UN FICHERO ERRONEO
-
-        try {
-            contenido.remove(elemento.nombre(), elemento);
-        } catch (NullPointerException e) {
-            throw new ExcepcionFicheroErroneo();
-        }
-
+    public void eliminarElemento(Fichero elemento){
+        
+        contenido.remove(elemento.nombre(), elemento);
+        
     }
 
     public int tamanyo(int nvl) throws ExcepcionCiclo {
-        if (nvl < 15) {
+        if( nvl < 15 ){
             int dato = 0;
 
             for (Map.Entry<String, Fichero> entry : contenido.entrySet()) {
                 Fichero prueba = entry.getValue();
-                dato += prueba.tamanyo(nvl + 1);
+                dato += prueba.tamanyo(nvl+1);
             }
 
             return dato;
-        } else {
+        }else{
             throw new ExcepcionCiclo();
         }
     }
@@ -55,14 +50,13 @@ class Directorio extends Fichero {
 
     }
 
-    public Fichero buscar(String clave) throws ExcepcionNoEncontrado {
+    public Fichero buscar(String clave) throws ExcepcionNoEncontrado{
         // EXCEPCION BUSCAR ALGO QUE NO EXISTE
-        try {
+        try{
             return contenido.get(clave);
-        } catch (NullPointerException e) {
+        }catch(NullPointerException e){
             throw new ExcepcionNoEncontrado(clave);
         }
-
     }
 
     public String who() {
