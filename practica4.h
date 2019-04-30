@@ -1,9 +1,9 @@
-
 #ifndef OBJETO_H
 #define OBJETO_H
 
 #include <string>
 #include <iostream>
+#include <type_traits>
 
 using namespace std;
 
@@ -22,21 +22,29 @@ class Objeto{
 
 };
 
-class Generico : public Objeto {
+class Necesario :public Objeto{
 
     public:
 
-        Generico( double cap ) : Objeto(cap){};
+       Necesario( double cap ) : Objeto(cap){};
 
 };
 
-class ProductoG : public Objeto {
+class Generico : public Necesario {
+
+    public:
+
+        Generico( double cap ) : Necesario(cap){};
+
+};
+
+class ProductoG : public Necesario {
 
     string Nombre;
 
     public:
 
-        ProductoG( double cap, string name ) : Objeto(cap), Nombre(name) {};
+        ProductoG( double cap, string name ) : Necesario(cap), Nombre(name) {};
 
 };
 
@@ -92,7 +100,9 @@ class Contenedor : public Generico, public Carga<T> {
 
     public:
 
-        Contenedor( double cap ) : Generico(cap), Carga<T>(cap) {};
+        Contenedor( double cap ) : Generico(cap), Carga<T>(cap) {
+            static_assert(std::is_base_of<Necesario,T>::value,"Tipo de dato no correcto");
+        };
 
 };
 
