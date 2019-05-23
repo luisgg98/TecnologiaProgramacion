@@ -6,12 +6,10 @@ module BinaryTree where
 data Tree a = Null | Branch a (Tree a) (Tree a) 
 
 instance Show a => Show (Tree a) where
-    show Null = ""
-    show (Branch x i d) = "("++ show i ++ show x ++ show d ++ ")"
+    show (Branch x Null Null) = " ("++ show x ++") "
+    show (Branch x i d) = " ("++ show i ++ show x ++ show d ++") "
 
---instance Show Blabla where                                                                                       
---    show (Blabla ints chars list num) =                                                                            
-  --      "integers = " ++ show ints ++ "\n"
+
 
 empty  :: Tree a
 empty = Null
